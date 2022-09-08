@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { getCategories } from '../services/api';
 
 class Search extends React.Component {
@@ -28,7 +29,14 @@ class Search extends React.Component {
             </button>
           ))}
         </aside>
+        <input type="text" />
         Digite algum termo de pesquisa ou escolha uma categoria.
+        <Link
+          to="/BuyCart"
+          data-testid="shopping-cart-button"
+        >
+          carrinho
+        </Link>
       </div>
     );
   }
