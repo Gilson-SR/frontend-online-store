@@ -16,6 +16,6 @@ export default class Product extends React.Component {
 
 Product.propTypes = {
   name: PropTypes.string.isRequired,
-  price: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
   image: PropTypes.string.isRequired,
 };
