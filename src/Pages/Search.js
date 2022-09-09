@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
+import Product from '../Components/Product';
 
 class Search extends React.Component {
   state = {
@@ -8,6 +9,7 @@ class Search extends React.Component {
     searching: '',
     category: '',
     listResults: [],
+    message: false,
   };
 
   async componentDidMount() {
@@ -26,6 +28,7 @@ class Search extends React.Component {
     const request = await getProductsFromCategoryAndQuery(category, searching);
     this.setState({
       listResults: request.results,
+      message: true,
     });
   };
 
@@ -38,7 +41,7 @@ class Search extends React.Component {
 
   render() {
     const { state, handleChange, handleClick } = this;
-    const { listCategories, searching } = state;
+    const { listCategories, searching, listResults, message } = state;
     return (
       <div data-testid="home-initial-message">
         <aside>
@@ -63,6 +66,20 @@ class Search extends React.Component {
           Pesquisar
         </button>
         Digite algum termo de pesquisa ou escolha uma categoria.
+        {
+          (listResults.length < 1) ? (
+            message && <p>Nenhum produto foi encontrado</p>
+          ) : (
+            listResults.map((element) => (<Product
+              data-testid="product"
+              name={ element.title }
+              price={ element.price }
+              image={ element.thumbnail }
+              key={ element.id }
+            />
+            ))
+          )
+        }
         <Link
           to="/BuyCart"
           data-testid="shopping-cart-button"
