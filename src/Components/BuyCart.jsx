@@ -13,14 +13,17 @@ class BuyCart extends React.Component {
   filterProducts() {
     const productsCart = getProductsCart();
     const productsFilter = productsCart.reduce((products, element) => {
-      if (products.includes(element)) {
+      if (products.some((e) => e.id === element.id)) {
         return products;
       }
       products.push(element);
-      console.log(products);
       return products;
     }, []);
     this.setState({ cartItems: productsFilter });
+  }
+
+  counterProducts() {
+    
   }
 
   render() {
