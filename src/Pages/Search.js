@@ -34,6 +34,16 @@ class Search extends React.Component {
     });
   };
 
+  handleClickCategorie = async ({ target }) => {
+    const { id } = target;
+    const { searching } = this.state;
+    const request = await getProductsFromCategoryAndQuery(searching, id);
+    const { results } = request;
+    this.setState({
+      listResults: results,
+    });
+  };
+
   getAllCategories = async () => {
     const categories = await getCategories();
     this.setState({
@@ -42,13 +52,19 @@ class Search extends React.Component {
   };
 
   render() {
-    const { state, handleChange, handleClick } = this;
+    const { state, handleChange, handleClick, handleClickCategorie } = this;
     const { listCategories, searching, listResults, message } = state;
     return (
       <div data-testid="home-initial-message">
         <aside>
           {listCategories.map(({ id, name }) => (
-            <button data-testid="category" type="button" id={ id } key={ id }>
+            <button
+              data-testid="category"
+              type="button"
+              id={ id }
+              key={ id }
+              onClick={ handleClickCategorie }
+            >
               {name}
             </button>
           ))}
