@@ -5,12 +5,10 @@ export default class Product extends React.Component {
   render() {
     const { name, price, image } = this.props;
     return (
-      <div>
-        <h2>
-          <img src={ image } alt={ name } />
-          <p>{`R$: ${price}`}</p>
-          <button type="button">Adicionar ao Carrinho</button>
-        </h2>
+      <div data-testid="product">
+        <img src={ image } alt={ name } />
+        <h3>{`R$: ${price}`}</h3>
+        <button type="button">Adicionar ao Carrinho</button>
       </div>
     );
   }
