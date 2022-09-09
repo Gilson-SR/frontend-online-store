@@ -1,21 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 export default class Product extends React.Component {
   render() {
-    const { name, price, image } = this.props;
+    const { product } = this.props;
+    const { thumbnail, name, id, price } = product;
     return (
       <div data-testid="product">
-        <img src={ image } alt={ name } />
-        <h3>{`R$: ${price}`}</h3>
-        <button type="button">Adicionar ao Carrinho</button>
+        <Link to={ `/${id}` } data-testid="product-detail-link">
+          <img src={ thumbnail } alt={ name } />
+          <h3>{`R$: ${price}`}</h3>
+        </Link>
+        <button type="button">
+          Adicionar ao Carrinho
+        </button>
       </div>
     );
   }
 }
 
 Product.propTypes = {
-  name: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired,
-};
+  product: PropTypes.shape({
+    name: PropTypes.string,
+    price: PropTypes.number,
+    thumbnail: PropTypes.string,
+  }),
+}.isRequired;
