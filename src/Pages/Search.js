@@ -85,9 +85,7 @@ class Search extends React.Component {
         ) : (
           listResults.map((element) => (
             <Product
-              name={ element.title }
-              price={ element.price }
-              image={ element.thumbnail }
+              product={ element }
               key={ element.id }
             />
           ))
