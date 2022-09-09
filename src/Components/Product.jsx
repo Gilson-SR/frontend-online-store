@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { saveProductCart } from '../services/localStorage';
 
 export default class Product extends React.Component {
   render() {
@@ -12,7 +13,11 @@ export default class Product extends React.Component {
           <img src={ thumbnail } alt={ name } />
           <h3>{`R$: ${price}`}</h3>
         </Link>
-        <button type="button">
+        <button
+          type="button"
+          data-testid="product-add-to-cart"
+          onClick={ () => saveProductCart(product) }
+        >
           Adicionar ao Carrinho
         </button>
       </div>

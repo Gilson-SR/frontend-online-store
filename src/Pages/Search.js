@@ -79,15 +79,14 @@ class Search extends React.Component {
         <button data-testid="query-button" type="button" onClick={ handleClick }>
           Pesquisar
         </button>
-        {message && <p>Digite algum termo de pesquisa ou escolha uma categoria.</p>}
+        {message && (
+          <p>Digite algum termo de pesquisa ou escolha uma categoria.</p>
+        )}
         {listResults.length < 1 ? (
           <p>Nenhum produto foi encontrado</p>
         ) : (
           listResults.map((element) => (
-            <Product
-              product={ element }
-              key={ element.id }
-            />
+            <Product product={ element } key={ element.id } />
           ))
         )}
         <Link to="/BuyCart" data-testid="shopping-cart-button">
