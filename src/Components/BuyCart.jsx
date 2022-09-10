@@ -4,10 +4,12 @@ import { getProductsCart } from '../services/localStorage';
 class BuyCart extends React.Component {
   state = {
     cartItems: [],
+    quantidades: {},
   };
 
   componentDidMount() {
     this.filterProducts();
+    this.counterProducts();
   }
 
   filterProducts() {
@@ -23,11 +25,19 @@ class BuyCart extends React.Component {
   }
 
   counterProducts() {
-    
+    const productsCart = getProductsCart();
+    const productsQuantity = productsCart.reduce((products, element) => {
+      if (!products[element.id]) {
+        products[element.id] = 0;
+      }
+      products[element.id] += 1;
+      return products;
+    }, {});
+    this.setState({ quantidades: productsQuantity });
   }
 
   render() {
-    const { cartItems } = this.state;
+    const { cartItems, quantidades } = this.state;
     return (
       <div>
         {cartItems.length < 1 ? (
@@ -39,8 +49,24 @@ class BuyCart extends React.Component {
             const { title, price, id } = product;
             return (
               <p key={ id }>
-                <span data-testid="shopping-cart-product-name">{title}</span>
-                <span>{price}</span>
+                <span data-testid="shopping-cart-product-name">
+                  {title}
+                </span>
+                <span>
+                  -
+                  {' '}
+                  {price}
+                  {' '}
+                  -
+                  {' '}
+                </span>
+                <span data-testid="shopping-cart-product-quantity">
+                  { quantidades[id] }
+                </span>
+                <span>
+                  {' '}
+                  Unds
+                </span>
               </p>
             );
           })
