@@ -13,7 +13,7 @@ class BuyCart extends React.Component {
   }
 
   filterProducts() {
-    const productsCart = getProductsCart();
+    const productsCart = getProductsCart() || [];
     const productsFilter = productsCart.reduce((products, element) => {
       if (products.some((e) => e.id === element.id)) {
         return products;
@@ -25,7 +25,7 @@ class BuyCart extends React.Component {
   }
 
   counterProducts() {
-    const productsCart = getProductsCart();
+    const productsCart = getProductsCart() || [];
     const productsQuantity = productsCart.reduce((products, element) => {
       if (!products[element.id]) {
         products[element.id] = 0;
