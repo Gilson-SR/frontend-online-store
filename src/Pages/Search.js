@@ -56,6 +56,9 @@ class Search extends React.Component {
     const { listCategories, searching, listResults, message } = state;
     return (
       <div data-testid="home-initial-message">
+        <Link to="/BuyCart" data-testid="shopping-cart-button">
+          carrinho
+        </Link>
         <aside>
           {listCategories.map(({ id, name }) => (
             <button
@@ -89,9 +92,6 @@ class Search extends React.Component {
             <Product product={ element } key={ element.id } />
           ))
         )}
-        <Link to="/BuyCart" data-testid="shopping-cart-button">
-          carrinho
-        </Link>
       </div>
     );
   }

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getProductById } from '../services/api';
+import { saveProductCart } from '../services/localStorage';
 
 class ProductDetails extends React.Component {
   state = {
@@ -23,13 +24,17 @@ class ProductDetails extends React.Component {
       infoImage: results.thumbnail,
       infoPrice: results.price,
       infoName: results.title,
+      allInfo: results,
     });
   }
 
   render() {
-    const { atributos, infoImage, infoName, infoPrice } = this.state;
+    const { atributos, infoImage, infoName, infoPrice, allInfo } = this.state;
     return (
       <div>
+        <Link to="/BuyCart" data-testid="shopping-cart-button">
+          Carrinho
+        </Link>
         <img
           data-testid="product-detail-image"
           src={ infoImage }
@@ -45,7 +50,13 @@ class ProductDetails extends React.Component {
             <li key={ product.id }>{`${product.name}: ${product.value_name}`}</li>
           ))}
         </ul>
-        <Link to="/BuyCart" data-testid="shopping-cart-button">Carrinho</Link>
+        <button
+          type="button"
+          data-testid="product-detail-add-to-cart"
+          onClick={ () => saveProductCart(allInfo) }
+        >
+          Adicionar ao Carinho
+        </button>
       </div>
     );
   }
