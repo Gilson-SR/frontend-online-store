@@ -1,5 +1,5 @@
 import React from 'react';
-import { getProductsCart } from '../services/localStorage';
+import { getProductsCart, removeProductCart } from '../services/localStorage';
 
 class BuyCart extends React.Component {
   state = {
@@ -11,6 +11,37 @@ class BuyCart extends React.Component {
     this.filterProducts();
     this.counterProducts();
   }
+
+  addCounter = (id) => {
+    const { quantidades } = this.state;
+    const counterByID = quantidades[id];
+    const sum = counterByID + 1;
+    const objSum = { [id]: sum };
+    this.setState(({ quantidades: quantity }) => ({
+      quantidades: { ...quantity, ...objSum },
+    }));
+  };
+
+  decreaseCounter = (id/* , product */) => {
+    const { quantidades } = this.state;
+    const counterByID = quantidades[id];
+    let sub = 0;
+    if (counterByID > 1) {
+      sub = counterByID - 1;
+    } else {
+      sub = 1;
+      // this.removeItemCart(product);
+    }
+    const objSub = { [id]: sub };
+    this.setState(({ quantidades: quantity }) => ({
+      quantidades: { ...quantity, ...objSub },
+    }));
+  };
+
+  removeItemCart = (obj) => {
+    removeProductCart(obj);
+    this.filterProducts();
+  };
 
   filterProducts() {
     const productsCart = getProductsCart() || [];
@@ -37,6 +68,7 @@ class BuyCart extends React.Component {
   }
 
   render() {
+    const { addCounter, decreaseCounter, removeItemCart } = this;
     const { cartItems, quantidades } = this.state;
     return (
       <div>
@@ -47,26 +79,44 @@ class BuyCart extends React.Component {
         ) : (
           cartItems.map((product) => {
             const { title, price, id } = product;
+            const totalPrice = price * quantidades[id];
             return (
               <p key={ id }>
-                <span data-testid="shopping-cart-product-name">
-                  {title}
-                </span>
-                <span>
-                  -
-                  {' '}
-                  {price}
-                  {' '}
-                  -
-                  {' '}
-                </span>
+                <span data-testid="shopping-cart-product-name">{title}</span>
+                <button
+                  type="button"
+                  data-testid="product-increase-quantity"
+                  onClick={ () => addCounter(id) }
+                >
+                  +
+                </button>
                 <span data-testid="shopping-cart-product-quantity">
-                  { quantidades[id] }
+                  {quantidades[id]}
                 </span>
+                <span> Unds</span>
+                <button
+                  type="button"
+                  data-testid="product-decrease-quantity"
+                  onClick={ () => decreaseCounter(id, product) }
+                >
+                  -
+                </button>
                 <span>
                   {' '}
-                  Unds
+                  R$:
+                  {' '}
+                  {totalPrice.toLocaleString({
+                    style: 'currency',
+                    currency: 'BRL',
+                  })}
                 </span>
+                <button
+                  type="button"
+                  data-testid="remove-product"
+                  onClick={ () => removeItemCart(product) }
+                >
+                  X
+                </button>
               </p>
             );
           })
