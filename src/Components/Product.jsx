@@ -6,12 +6,20 @@ import { saveProductCart } from '../services/localStorage';
 export default class Product extends React.Component {
   render() {
     const { product } = this.props;
-    const { thumbnail, name, id, price } = product;
+    const {
+      thumbnail,
+      name,
+      id,
+      price,
+      shipping: { free_shipping: freteGratis },
+    } = product;
+    console.log(product);
     return (
       <div data-testid="product">
         <Link to={ `/${id}` } data-testid="product-detail-link">
           <img src={ thumbnail } alt={ name } />
           <h3>{`R$: ${price}`}</h3>
+          {freteGratis && <h4 data-testid="free-shipping">Frete Grátis</h4>}
         </Link>
         <button
           type="button"
