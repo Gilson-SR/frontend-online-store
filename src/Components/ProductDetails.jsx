@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getProductById } from '../services/api';
 import { saveProductCart } from '../services/localStorage';
+import EvaluationForm from './EvaluationForm';
+import { getSavedComents, saveComent } from '../services/storageEvaluation';
 
 class ProductDetails extends React.Component {
   state = {
@@ -10,6 +12,11 @@ class ProductDetails extends React.Component {
     infoImage: '',
     infoPrice: 0,
     infoName: '',
+    inputEmail: '',
+    mensagem: '',
+    nota: 0,
+    error: false,
+    coments: [],
   };
 
   async componentDidMount() {
@@ -18,7 +25,9 @@ class ProductDetails extends React.Component {
         params: { id },
       },
     } = this.props;
+
     const results = await getProductById(id);
+    this.getComents();
     this.setState({
       atributos: results.attributes,
       infoImage: results.thumbnail,
@@ -28,8 +37,70 @@ class ProductDetails extends React.Component {
     });
   }
 
+  getComents = () => {
+    const {
+      match: {
+        params: { id },
+      },
+    } = this.props;
+
+    const coments = getSavedComents(id) || [];
+
+    this.setState({ coments });
+  };
+
+  handleChange = ({ target }) => {
+    const { name, value } = target;
+    this.setState({
+      [name]: value,
+    });
+  };
+
+  handleCheckRate = ({ target }) => {
+    const { id } = target;
+    const value = Number(id.split('')[0]);
+    this.setState({ nota: value });
+  };
+
+  handleClick = () => {
+    const { inputEmail, nota, mensagem } = this.state;
+    const {
+      match: {
+        params: { id },
+      },
+    } = this.props;
+    const verifyEmail = inputEmail.endsWith('.com') && inputEmail.split('')[0] !== '@';
+    const coment = { email: inputEmail, text: mensagem, rating: nota };
+    if (verifyEmail && nota > 0) {
+      saveComent(coment, id);
+      this.getComents();
+      this.setState({
+        error: false,
+        inputEmail: '',
+        mensagem: '',
+        nota: 0,
+      });
+    } else {
+      this.setState({
+        error: true,
+      });
+    }
+  };
+
   render() {
-    const { atributos, infoImage, infoName, infoPrice, allInfo } = this.state;
+    const { state, handleChange, handleCheckRate, handleClick } = this;
+    const {
+      atributos,
+      infoImage,
+      infoName,
+      infoPrice,
+      allInfo,
+      inputEmail,
+      mensagem,
+      nota,
+      error,
+      coments,
+    } = state;
     return (
       <div>
         <Link to="/BuyCart" data-testid="shopping-cart-button">
@@ -57,6 +128,26 @@ class ProductDetails extends React.Component {
         >
           Adicionar ao Carinho
         </button>
+        <div>
+          <EvaluationForm
+            handleChange={ handleChange }
+            handleCheckRate={ handleCheckRate }
+            handleClick={ handleClick }
+            inputEmail={ inputEmail }
+            mensagem={ mensagem }
+            nota={ nota }
+          />
+          {error && <p data-testid="error-msg">Campos inválidos</p>}
+        </div>
+        <div>
+          {coments.map(({ email, text, rating }, index) => (
+            <div key={ index }>
+              <p data-testid="review-card-email">{email}</p>
+              <p data-testid="review-card-rating">{rating}</p>
+              <p data-testid="review-card-evaluation">{text}</p>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
