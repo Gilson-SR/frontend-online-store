@@ -13,16 +13,21 @@ class BuyCart extends React.Component {
   }
 
   addCounter = (id) => {
-    const { quantidades } = this.state;
+    const { quantidades, cartItems } = this.state;
     const counterByID = quantidades[id];
-    const sum = counterByID + 1;
+    const obj = cartItems.find((e) => e.id === id);
+    const { available_quantity: availableQuantity } = obj;
+    let sum = availableQuantity;
+    if (availableQuantity > counterByID) {
+      sum = counterByID + 1;
+    }
     const objSum = { [id]: sum };
     this.setState(({ quantidades: quantity }) => ({
       quantidades: { ...quantity, ...objSum },
     }));
   };
 
-  decreaseCounter = (id/* , product */) => {
+  decreaseCounter = (id /* , product */) => {
     const { quantidades } = this.state;
     const counterByID = quantidades[id];
     let sub = 0;
