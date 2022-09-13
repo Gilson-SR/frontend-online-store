@@ -17,3 +17,7 @@ export function removeProductCart(product) {
 export function clearCart() {
   localStorage.setItem('cartItems', JSON.stringify([]));
 }
+
+// export function saveCartSize() {
+
+// }
