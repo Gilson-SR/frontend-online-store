@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getProductById } from '../services/api';
-import { saveProductCart } from '../services/localStorage';
-import EvaluationForm from './EvaluationForm';
+import { saveProductCart } from '../services/StorageCart';
+import EvaluationForm from '../Components/EvaluationForm';
 import { getSavedComents, saveComent } from '../services/storageEvaluation';
 
 class ProductDetails extends React.Component {
@@ -69,7 +69,9 @@ class ProductDetails extends React.Component {
         params: { id },
       },
     } = this.props;
-    const verifyEmail = inputEmail.endsWith('.com') && inputEmail.split('')[0] !== '@';
+    const verifyEmail = inputEmail.endsWith('.com')
+      && inputEmail.split('')[0] !== '@'
+      && inputEmail.includes('@');
     const coment = { email: inputEmail, text: mensagem, rating: nota };
     if (verifyEmail && nota > 0) {
       saveComent(coment, id);
