@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getProductById } from '../services/api';
-import { saveProductCart } from '../services/StorageCart';
+import { saveProductCart, getProductsCart } from '../services/StorageCart';
 import EvaluationForm from '../Components/EvaluationForm';
 import { getSavedComents, saveComent } from '../services/storageEvaluation';
 
@@ -17,6 +17,7 @@ class ProductDetails extends React.Component {
     nota: 0,
     error: false,
     coments: [],
+    sizeCart: 0,
   };
 
   async componentDidMount() {
@@ -28,6 +29,7 @@ class ProductDetails extends React.Component {
 
     const results = await getProductById(id);
     this.getComents();
+    this.getSizeCart();
     this.setState({
       atributos: results.attributes,
       infoImage: results.thumbnail,
@@ -89,8 +91,16 @@ class ProductDetails extends React.Component {
     }
   };
 
+  getSizeCart = () => {
+    const cartItems = getProductsCart() || [];
+    const sizeCart = cartItems.length;
+    this.setState({
+      sizeCart,
+    });
+  };
+
   render() {
-    const { state, handleChange, handleCheckRate, handleClick } = this;
+    const { state, handleChange, handleCheckRate, handleClick, getSizeCart } = this;
     const {
       atributos,
       infoImage,
@@ -102,11 +112,13 @@ class ProductDetails extends React.Component {
       nota,
       error,
       coments,
+      sizeCart,
     } = state;
     return (
       <div>
         <Link to="/BuyCart" data-testid="shopping-cart-button">
-          Carrinho
+          <span>Carrinho</span>
+          <span data-testid="shopping-cart-size">{ sizeCart }</span>
         </Link>
         <img
           data-testid="product-detail-image"
@@ -126,7 +138,10 @@ class ProductDetails extends React.Component {
         <button
           type="button"
           data-testid="product-detail-add-to-cart"
-          onClick={ () => saveProductCart(allInfo) }
+          onClick={ () => {
+            saveProductCart(allInfo);
+            getSizeCart();
+          } }
         >
           Adicionar ao Carinho
         </button>

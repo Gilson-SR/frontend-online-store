@@ -5,6 +5,7 @@ import {
   getProductsFromCategoryAndQuery,
 } from '../services/api';
 import Product from '../Components/Product';
+import { getProductsCart } from '../services/StorageCart';
 
 class Search extends React.Component {
   state = {
@@ -12,6 +13,7 @@ class Search extends React.Component {
     searching: '',
     listResults: [],
     message: true,
+    sizeCart: 0,
   };
 
   async componentDidMount() {
@@ -22,6 +24,15 @@ class Search extends React.Component {
     const { name, value } = target;
     this.setState({
       [name]: value,
+    });
+  };
+
+  getSizeCart = () => {
+    const cartItems = getProductsCart() || [];
+    const sizeCart = cartItems.length;
+    console.log(cartItems);
+    this.setState({
+      sizeCart,
     });
   };
 
@@ -52,12 +63,13 @@ class Search extends React.Component {
   };
 
   render() {
-    const { state, handleChange, handleClick, handleClickCategorie } = this;
-    const { listCategories, searching, listResults, message } = state;
+    const { state, handleChange, handleClick, handleClickCategorie, getSizeCart } = this;
+    const { listCategories, searching, listResults, message, sizeCart } = state;
     return (
       <div data-testid="home-initial-message">
         <Link to="/BuyCart" data-testid="shopping-cart-button">
-          carrinho
+          <span>Carrinho</span>
+          <span data-testid="shopping-cart-size">{ sizeCart }</span>
         </Link>
         <aside>
           {listCategories.map(({ id, name }) => (
@@ -89,7 +101,7 @@ class Search extends React.Component {
           <p>Nenhum produto foi encontrado</p>
         ) : (
           listResults.map((element) => (
-            <Product product={ element } key={ element.id } />
+            <Product callback={ getSizeCart } product={ element } key={ element.id } />
           ))
         )}
       </div>

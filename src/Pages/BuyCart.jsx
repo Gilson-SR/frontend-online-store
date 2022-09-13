@@ -49,7 +49,7 @@ class BuyCart extends React.Component {
     this.filterProducts();
   };
 
-  filterProducts() {
+  filterProducts = () => {
     const productsCart = getProductsCart() || [];
     const productsFilter = productsCart.reduce((products, element) => {
       if (products.some((e) => e.id === element.id)) {
@@ -59,7 +59,7 @@ class BuyCart extends React.Component {
       return products;
     }, []);
     this.setState({ cartItems: productsFilter });
-  }
+  };
 
   counterProducts() {
     const productsCart = getProductsCart() || [];

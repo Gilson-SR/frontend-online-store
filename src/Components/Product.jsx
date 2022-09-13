@@ -5,7 +5,7 @@ import { saveProductCart } from '../services/StorageCart';
 
 export default class Product extends React.Component {
   render() {
-    const { product } = this.props;
+    const { product, callback } = this.props;
     const {
       thumbnail,
       title,
@@ -24,7 +24,10 @@ export default class Product extends React.Component {
         <button
           type="button"
           data-testid="product-add-to-cart"
-          onClick={ () => saveProductCart(product) }
+          onClick={ () => {
+            saveProductCart(product);
+            callback();
+          } }
         >
           Adicionar ao Carrinho
         </button>
@@ -38,5 +41,6 @@ Product.propTypes = {
     name: PropTypes.string,
     price: PropTypes.number,
     thumbnail: PropTypes.string,
+    callback: PropTypes.func,
   }),
 }.isRequired;
