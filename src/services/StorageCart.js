@@ -13,3 +13,7 @@ export function removeProductCart(product) {
   const productsFiltered = products.filter((p) => p.id !== product.id);
   localStorage.setItem('cartItems', JSON.stringify(productsFiltered));
 }
+
+export function clearCart() {
+  localStorage.setItem('cartItems', JSON.stringify([]));
+}

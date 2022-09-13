@@ -1,5 +1,6 @@
 import React from 'react';
-import { getProductsCart, removeProductCart } from '../services/localStorage';
+import { Link } from 'react-router-dom';
+import { getProductsCart, removeProductCart } from '../services/StorageCart';
 
 class BuyCart extends React.Component {
   state = {
@@ -126,6 +127,14 @@ class BuyCart extends React.Component {
             );
           })
         )}
+        {
+          cartItems.length > 0 && (
+            <Link to="/BuyCart/Checkout" data-testid="checkout-products">
+              Finalizar Compra
+            </Link>
+          )
+        }
+
       </div>
     );
   }
